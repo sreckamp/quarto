@@ -61,7 +61,7 @@
     <Compile Include="Rules\QuartoPlaceRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GameBase\src\GameBase.Model\GameBase.Model.csproj">
+    <ProjectReference Include="..\..\..\game-base\src\GameBase.Model\GameBase.Model.csproj">
       <Project>{45cfc74e-2b9d-4ed3-82ef-617e3f4404b2}</Project>
       <Name>GameBase.Model</Name>
     </ProjectReference>

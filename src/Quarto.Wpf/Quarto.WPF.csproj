@@ -125,11 +125,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\GameBase\src\GameBase.Model\GameBase.Model.csproj">
-      <Project>{45CFC74E-2B9D-4ED3-82EF-617E3F4404B2}</Project>
+    <ProjectReference Include="..\..\..\game-base\src\GameBase.Model\GameBase.Model.csproj">
+      <Project>{45cfc74e-2b9d-4ed3-82ef-617e3f4404b2}</Project>
       <Name>GameBase.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\GameBase\src\GameBase.WPF\GameBase.WPF.csproj">
+    <ProjectReference Include="..\..\..\game-base\src\GameBase.WPF\GameBase.WPF.csproj">
       <Project>{8f81666e-b492-4817-80eb-6fbc955b3044}</Project>
       <Name>GameBase.WPF</Name>
     </ProjectReference>

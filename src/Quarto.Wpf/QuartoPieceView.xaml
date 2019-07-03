@@ -6,35 +6,35 @@
     x:Class="Quarto.WPF.QuartoPieceView"
     d:DesignWidth="150" d:DesignHeight="150">
     <Viewbox>
-        <Viewbox.Resources>
-            <Style x:Key="piece" TargetType="Shape">
-                <Setter Property="Fill" Value="Transparent"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Color}" Value="Light">
-                        <Setter Property="Fill" Value="Khaki"/>
-                    </DataTrigger>
-                    <DataTrigger Binding="{Binding Color}" Value="Dark">
-                        <Setter Property="Fill" Value="SaddleBrown"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Viewbox.Resources>
-        <Grid>
+        <Grid Width="150" Height="150">
             <Grid>
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Setter Property="Margin" Value="0"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Height}" Value="Short">
+                            <DataTrigger Binding="{Binding Height}" Value="Half">
                                 <Setter Property="Margin" Value="25"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
+                <Grid.Resources>
+                    <Style x:Key="piece" TargetType="Shape">
+                        <Setter Property="Fill" Value="Transparent"/>
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Color}" Value="Light">
+                                <Setter Property="Fill" Value="Khaki"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Color}" Value="Dark">
+                                <Setter Property="Fill" Value="SaddleBrown"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
                 <Rectangle>
                     <Rectangle.Style>
                         <Style TargetType="Rectangle" BasedOn="{StaticResource piece}">
-                            <Setter Property="Visibility" Value="Hidden"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Shape}" Value="Square">
                                     <Setter Property="Visibility" Value="Visible"/>
@@ -46,12 +46,7 @@
                 <Ellipse>
                     <Ellipse.Style>
                         <Style TargetType="Ellipse" BasedOn="{StaticResource piece}">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                            <Setter Property="Margin" Value="0"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Height}" Value="Short">
-                                    <Setter Property="Margin" Value="25"/>
-                                </DataTrigger>
                                 <DataTrigger Binding="{Binding Shape}" Value="Round">
                                     <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
@@ -65,7 +60,7 @@
                     <Style TargetType="Ellipse">
                         <Setter Property="Visibility" Value="Hidden"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Fill}" Value="Hollow">
+                            <DataTrigger Binding="{Binding Fill}" Value="Open">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>

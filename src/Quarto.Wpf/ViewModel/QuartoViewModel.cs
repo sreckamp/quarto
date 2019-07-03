@@ -21,7 +21,7 @@ namespace Quarto.WPF.ViewModel
         public QuartoViewModel()
         {
             m_game = new Game();
-            m_game.StateChanged += m_game_StateChanged;
+            m_game.StateChanged += game_StateChanged;
             m_game.Board.QuartoColumnChanged += board_QuartoColumnChanged;
             m_game.Board.QuartoDiagonalChanged += board_QuartoDiagonalChanged;
             m_game.Board.QuartoRowChanged += board_QuartoRowChanged;
@@ -62,7 +62,7 @@ namespace Quarto.WPF.ViewModel
             return sb.ToString().ToUpper();
         }
 
-        private void m_game_StateChanged(object sender, ChangedValueArgs<GameState> e)
+        private void game_StateChanged(object sender, ChangedValueArgs<GameState> e)
         {
             if(e.OldVal != e.NewVal)
             {
@@ -124,7 +124,7 @@ namespace Quarto.WPF.ViewModel
             set { m_actionText = value; notifyPropertyChanged(nameof(ActionText)); }
         }
 
-        private Dictionary<Player, PlayerViewModel> m_playerModels = new Dictionary<Player, PlayerViewModel>();
+        private readonly Dictionary<Player, PlayerViewModel> m_playerModels = new Dictionary<Player, PlayerViewModel>();
         public PlayerViewModel ActivePlayerModel
         {
             get
@@ -137,7 +137,7 @@ namespace Quarto.WPF.ViewModel
                 return m_playerModels[ap];
             }
         }
-        public QuartoPlacementViewModel ActivePiece
+        public QuartoPlacementViewModel ActivePlacement
         {
             get
             {
@@ -154,7 +154,7 @@ namespace Quarto.WPF.ViewModel
                 {
                     FloatingPieces.Add(value);
                 }
-                notifyPropertyChanged(nameof(ActivePiece));
+                notifyPropertyChanged(nameof(ActivePlacement));
             }
         }
 
@@ -189,7 +189,7 @@ namespace Quarto.WPF.ViewModel
 
         private void choose(object obj)
         {
-            ActivePlayerModel?.TriggerChoice(ActivePiece.Piece);
+            ActivePlayerModel?.TriggerChoice(ActivePlacement.Piece);
         }
 
         public ICommand PlaceCommand => new RelayCommand<object>(place, canPlace);
@@ -200,7 +200,7 @@ namespace Quarto.WPF.ViewModel
 
         private void place(object obj)
         {
-            ActivePlayerModel?.TriggerPlacement(ActivePiece?.Move);
+            ActivePlayerModel?.TriggerPlacement(ActivePlacement?.Move);
         }
 
         public ICommand MoveCommand => new RelayCommand<GridCellRoutedEventArgs>(move, canMove);
@@ -211,10 +211,9 @@ namespace Quarto.WPF.ViewModel
 
         private void move(GridCellRoutedEventArgs args)
         {
-            if (m_game.State == GameState.Place && ActivePiece != null)
+            if (m_game.State == GameState.Place)
             {
-                var m = new Move(args.Cell);
-                ActivePiece.Move = m;
+                ActivePlacement?.SetCell(args.Cell);
             }
         }
 
