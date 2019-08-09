@@ -10,9 +10,9 @@ namespace Quarto.Console
 {
     public class ConsoleQuartoPlayerView
     {
-        private readonly Player m_player;
+        private readonly AbstractPlayer m_player;
 
-        public ConsoleQuartoPlayerView(Player player)
+        public ConsoleQuartoPlayerView(AbstractPlayer player)
         {
             m_player = player;
         }

@@ -11,25 +11,23 @@ namespace Quarto.Console
 {
     public class ConsoleQuartoPieceView : ConsoleTextBox
     {
-        private readonly Move m_move;
-        public ConsoleQuartoPieceView(Placement<QuartoPiece, Move> placement) : this(placement?.Piece, placement?.Move)
-        { }
+        private readonly Placement<QuartoPiece, Move> m_placement;
+        //private readonly Move m_move;
 
-        public ConsoleQuartoPieceView(QuartoPiece piece) : this(piece, null) { }
-        public ConsoleQuartoPieceView(QuartoPiece piece, Move move)
+        public ConsoleQuartoPieceView(QuartoPiece piece) : this(new Placement<QuartoPiece,Move>(piece, null)) { }
+        public ConsoleQuartoPieceView(Placement<QuartoPiece, Move> placement)
         {
-            Piece = piece;
-            m_move = move;
+            m_placement = placement;
             Width = Height = 2;
             IsWrapText = true;
-            Text = toText(piece);
-            ForegroundColor = piece.Color == Color.Dark ? ConsoleColor.DarkGray : ConsoleColor.White;
+            Text = toText(Piece);
+            ForegroundColor = Piece?.Color == Color.Dark ? ConsoleColor.DarkGray : ConsoleColor.White;
         }
 
-        public QuartoPiece Piece { get; private set; }
+        public QuartoPiece Piece => m_placement?.Piece;
 
-        public int Column => m_move?.Location.X ?? -1;
-        public int Row => m_move?.Location.Y ?? -1;
+        public int Column => m_placement?.Move?.Location.X ?? -1;
+        public int Row => m_placement?.Move?.Location.Y ?? -1;
         private string toText(QuartoPiece piece)
         {
             string text = "";

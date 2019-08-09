@@ -13,9 +13,9 @@ namespace Quarto.WPF.ViewModel
 {
     public class PlayerViewModel
     {
-        private readonly Player m_player;
+        private readonly AbstractPlayer m_player;
 
-        public PlayerViewModel(Player player)
+        public PlayerViewModel(AbstractPlayer player)
         {
             m_player = player;
         }

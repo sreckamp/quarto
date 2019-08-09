@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quarto.WPF", "Quarto.Wpf\Qu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBase.WPF", "..\..\game-base\src\GameBase.WPF\GameBase.WPF.csproj", "{8F81666E-B492-4817-80EB-6FBC955B3044}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quarto.LearningPlayer", "Quarto.LearningPlayer\Quarto.LearningPlayer.csproj", "{4B78B1FE-8EE8-4979-A189-1B3654E64747}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBase.Console", "..\..\game-base\src\GameBase.Console\GameBase.Console.csproj", "{BB28C9FD-64AA-4DE1-89F6-298312235045}"
 EndProject
 Global

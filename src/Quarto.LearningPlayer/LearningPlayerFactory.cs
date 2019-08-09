@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace Quarto.LearningPlayer
 {
-    public class LearningPlayerFactory : IPlayerFactory
+    public class LearningPlayerFactory : PlayerFactory
     {
         public static LearningDataPool Pool = new LearningDataPool();
-        public static bool IsLearning = true;
         public Player GetPlayer(int playerNumber)
         {
-            return new LearningPlayer(playerNumber, IsLearning, Pool);
+            return new LearningPlayer(playerNumber, Pool);
         }
     }
 }

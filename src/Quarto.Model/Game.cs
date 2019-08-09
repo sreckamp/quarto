@@ -18,25 +18,19 @@ namespace Quarto.Model
 
     public class Game
     {
-        private readonly IPlayerFactory m_playerFactory;
-        private readonly Player[] m_players = new Player[2];
-        public int ChooseDelay;
-        public int PlaceDelay;
+        private readonly AbstractPlayer[] m_players = new AbstractPlayer[2];
 
-        public Game(IPlayerFactory playerFactory = null, int chooseDelay = 0, int placeDelay = 0)
+        public Game()
         {
-            m_playerFactory = playerFactory ?? new UserPlayerFactory();
-            ChooseDelay = chooseDelay;
-            PlaceDelay = placeDelay;
             Board = new QuartoBoard();
             Pieces = new ObservableList<QuartoPiece>();
         }
 
         public QuartoBoard Board { get; private set; }
         public ObservableList<QuartoPiece> Pieces { get; private set; }
-        public event EventHandler<ChangedValueArgs<Player>> ActivePlayerChanged;
-        public Player ActivePlayer => m_players[activeIdx];
-        public Player OtherPlayer => m_players[(activeIdx + 1) % 2];
+        public event EventHandler<ChangedValueArgs<AbstractPlayer>> ActivePlayerChanged;
+        public AbstractPlayer ActivePlayer => m_players[activeIdx];
+        public AbstractPlayer OtherPlayer => m_players[(activeIdx + 1) % 2];
 
         private int m_activeIdx = 0;
         private int activeIdx
@@ -46,7 +40,7 @@ namespace Quarto.Model
             {
                 var old = ActivePlayer;
                 m_activeIdx = value;
-                ActivePlayerChanged?.Invoke(this, new ChangedValueArgs<Player>(old, ActivePlayer));
+                ActivePlayerChanged?.Invoke(this, new ChangedValueArgs<AbstractPlayer>(old, ActivePlayer));
             }
         }
 
@@ -63,24 +57,24 @@ namespace Quarto.Model
             }
         }
 
-        public Player Play()
+        public AbstractPlayer Play(AbstractPlayer player1, AbstractPlayer player2)
         {
-            resetGame();
+            resetGame(player1, player2);
             activeIdx = 0;
             bool tie;
             do
             {
-                if (Pieces.Count < 16 && !(ActivePlayer is UserPlayer) && PlaceDelay > 0)
-                {
-                    System.Threading.Thread.Sleep(PlaceDelay);
-                }
+                //if (Pieces.Count < 16 && !(ActivePlayer is UserPlayer) && PlaceDelay > 0)
+                //{
+                //    System.Threading.Thread.Sleep(PlaceDelay);
+                //}
                 State = GameState.Choose;
                 var pcs = ActivePlayer.ChoosePiece(Board, Pieces);
                 State = GameState.Lock;
-                if (!(ActivePlayer is UserPlayer) && ChooseDelay > 0)
-                {
-                    System.Threading.Thread.Sleep(ChooseDelay);
-                }
+                //if (!(ActivePlayer is UserPlayer) && ChooseDelay > 0)
+                //{
+                //    System.Threading.Thread.Sleep(ChooseDelay);
+                //}
                 activeIdx = (activeIdx + 1) % 2;
                 State = GameState.Place;
                 var m = ActivePlayer.GetPlacement(Board, pcs);
@@ -103,7 +97,7 @@ namespace Quarto.Model
             }
         }
 
-        private void resetGame()
+        private void resetGame(AbstractPlayer player1, AbstractPlayer player2)
         {
             Board.Clear();
             Pieces.Clear();
@@ -125,11 +119,8 @@ namespace Quarto.Model
                     }
                 }
             }
-            for(int i = 0; i < m_players.Length; i++)
-            {
-                m_players[i] = m_playerFactory.GetPlayer(i + 1);
-                m_players[i].Prepare();
-            }
+            m_players[0] = player1?.Prepare();
+            m_players[1] = player2?.Prepare();
         }
     }
 }

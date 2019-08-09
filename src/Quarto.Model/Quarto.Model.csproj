@@ -34,6 +34,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,13 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserPlayerFactory.cs" />
-    <Compile Include="RandomPlayerFactory.cs" />
+    <Compile Include="Learning\LearningDataPool.cs" />
+    <Compile Include="Learning\LearningDatum.cs" />
+    <Compile Include="Learning\LearningPlayer.cs" />
+    <Compile Include="Learning\QuartoBoardSnapshot.cs" />
+    <Compile Include="Learning\Statistics.cs" />
     <Compile Include="RandomPlayer.cs" />
     <Compile Include="Fill.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="IPlayerFactory.cs" />
+    <Compile Include="AbstractPlayer.cs" />
     <Compile Include="UserPlayer.cs" />
     <Compile Include="QuartoAttribute.cs" />
     <Compile Include="QuartoAttributeType.cs" />

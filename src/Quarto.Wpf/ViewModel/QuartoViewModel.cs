@@ -68,11 +68,11 @@ namespace Quarto.WPF.ViewModel
             {
                 if(e.NewVal == GameState.Choose)
                 {
-                    ActionText = string.Format("{0}, Choose a piece for {1} to place.", m_game.ActivePlayer, m_game.OtherPlayer);
+                    ActionText = $"{m_game.ActivePlayer}, choose a piece for {m_game.OtherPlayer} to place.";
                 }
                 else if (e.NewVal == GameState.Place)
                 {
-                    ActionText = string.Format("{0}, Place the piece.", m_game.ActivePlayer);
+                    ActionText = $"{m_game.ActivePlayer}, place the piece.";
                 }
             }
             notifyPropertyChanged(nameof(GameState));
@@ -124,7 +124,7 @@ namespace Quarto.WPF.ViewModel
             set { m_actionText = value; notifyPropertyChanged(nameof(ActionText)); }
         }
 
-        private readonly Dictionary<Player, PlayerViewModel> m_playerModels = new Dictionary<Player, PlayerViewModel>();
+        private readonly Dictionary<AbstractPlayer, PlayerViewModel> m_playerModels = new Dictionary<AbstractPlayer, PlayerViewModel>();
         public PlayerViewModel ActivePlayerModel
         {
             get
@@ -163,10 +163,10 @@ namespace Quarto.WPF.ViewModel
             while(true)
             {
                 m_playerModels.Clear();
-                var winner = m_game.Play();
+                var winner = m_game.Play(new UserPlayer("Player 1"), new UserPlayer("Player 2"));
                 if(winner != null)
                 {
-                    ActionText = string.Format("{0} Wins!", winner);
+                    ActionText = $"{winner} Wins!";
                 }
                 else
                 {

@@ -1,14 +1,9 @@
-﻿using Quarto.Model;
-using System;
+﻿using GameBase.Model;
+using Quarto.Model;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GameBase.Model;
-using System.Drawing;
 using System.Numerics;
 
-namespace Quarto.LearningPlayer
+namespace Quarto.Learning
 {
     public class LearningPlayer : RandomPlayer
     {
@@ -17,19 +12,17 @@ namespace Quarto.LearningPlayer
         private readonly List<KeyValuePair<BigInteger, QuartoPiece>> m_opponentChoices = new List<KeyValuePair<BigInteger, QuartoPiece>>();
         private readonly List<KeyValuePair<BigInteger, Placement<QuartoPiece, Move>>> m_opponentPlacements = new List<KeyValuePair<BigInteger, Placement<QuartoPiece, Move>>>();
         private readonly LearningDataPool m_pool;
-        private QuartoBoardSnapshot m_lastState;
-        private QuartoPiece m_lastPiece;
-        public LearningPlayer(int playerNumber, LearningDataPool pool) : base(playerNumber)
+        public LearningPlayer(string name, string poolPath, int chooseDelay = 0, int placeDelay = 0) : base(name, chooseDelay, placeDelay)
         {
-            m_pool = pool;
+            m_pool = LearningDataPool.Get(poolPath);
         }
 
-        public bool IsTraining { get; set; }
+        private bool m_isTraining = false;
 
         protected override QuartoPiece InternalChoosePiece(QuartoBoard board, IList<QuartoPiece> pieces)
         {
             QuartoPiece choice = null;
-            if (IsTraining)
+            if (m_isTraining)
             {
                 choice = base.InternalChoosePiece(board, getSafePieces(board, pieces) ?? pieces);
                 storeChoice(board, pieces, choice);
@@ -44,7 +37,6 @@ namespace Quarto.LearningPlayer
         private void storeChoice(QuartoBoard board, IList<QuartoPiece> pieces, QuartoPiece choice)
         {
             var state = QuartoBoardSnapshot.Calculate(board);
-//            m_lastPiece = choice;
             m_choices.Add(new KeyValuePair<BigInteger, QuartoPiece>(state, choice));
         }
 
@@ -57,13 +49,13 @@ namespace Quarto.LearningPlayer
         private IList<QuartoPiece> getSafePieces(QuartoBoard board, IList<QuartoPiece> pieces)
         {
             var safe = new List<QuartoPiece>();
-            foreach(var p in pieces)
+            foreach (var p in pieces)
             {
                 var isSafe = true;
                 foreach (var loc in board.AvailableLocations)
                 {
                     var m = new Move(loc);
-                    if(board.WouldWin(p,m))
+                    if (board.WouldWin(p, m))
                     {
                         isSafe = false;
                         break;
@@ -71,19 +63,15 @@ namespace Quarto.LearningPlayer
                 }
                 if (isSafe) safe.Add(p);
             }
-            return safe.Count > 0 ? safe:null;
+            return safe.Count > 0 ? safe : null;
         }
 
         protected override Move InternalGetPlacement(QuartoBoard board, QuartoPiece piece)
         {
             Move move = null;
-            if (IsTraining)
+            if (m_isTraining)
             {
-                //var last = m_pool.GetBestPlacement(board, piece);
                 move = checkForKill(board, piece) ?? base.InternalGetPlacement(board, piece);
-                //if (last.X >= 0)
-                //{
-                //}
                 storePlacement(board, piece, move);
             }
             else
@@ -101,7 +89,7 @@ namespace Quarto.LearningPlayer
                 foreach (var loc in board.AvailableLocations)
                 {
                     var m = new Move(loc);
-                    if (board.WouldWin(piece,m))
+                    if (board.WouldWin(piece, m))
                     {
                         kill = m;
                         break;
@@ -115,13 +103,6 @@ namespace Quarto.LearningPlayer
         {
             var state = QuartoBoardSnapshot.Calculate(board);
             m_placements.Add(new KeyValuePair<BigInteger, Placement<QuartoPiece, Move>>(state, new Placement<QuartoPiece, Move>(piece, move)));
-            // new KeyValuePair<QuartoPiece, QuartoPiece>(m_lastState, choice);
-            //m_opponentChoices[state] = piece;
-            //if (m_lastState != null && m_lastPiece != null)
-            //{
-            //    Move m = board.GetMove(m_lastPiece);
-            //    m_opponentPlacements[m_lastState] = new KeyValuePair<QuartoPiece, Point>(m_lastPiece, m);
-            //}
         }
 
         private Move getBestPlacement(QuartoBoard board, QuartoPiece piece)
@@ -133,9 +114,19 @@ namespace Quarto.LearningPlayer
         public override void GameOver(GameResult result)
         {
             m_pool.UpdateChoiceStatistics(m_choices, result);
-            //m_pool.UpdateChoiceStatistics(m_opponentChoices, result.Opposite());
             m_pool.UpdatePlacementStatistics(m_placements, result);
-            //m_pool.UpdatePlacementStatistics(m_opponentPlacements, result.Opposite());
+        }
+
+        public void Train(int gameCount)
+        {
+            var lGame = new Game();
+            m_isTraining = true;
+            for (int i = 0; i < gameCount; i++)
+            {
+                lGame.Play(this, this);
+            }
+            m_isTraining = false;
+            m_pool.Write();
         }
     }
 }

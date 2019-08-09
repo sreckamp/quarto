@@ -14,6 +14,7 @@ namespace Quarto.WPF.ViewModel
         public Shape Shape => Piece?.Shape ?? Shape.Undefined;
         public Height Height => Piece?.Height ?? Height.Undefined;
         public Color Color => Piece?.Color ?? Color.Undefined;
+
         protected override Move GetMove(int locationX, int locationY)
         {
             return new Move(locationX, locationY);

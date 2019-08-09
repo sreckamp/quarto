@@ -14,7 +14,7 @@ namespace Quarto.Console
     {
         public static void Main(string[] args)
         {
-            var cv = new ConsoleQuartoView();
+            var cv = new ConsoleQuartoView(args.Length > 0 ? args[0] : null, args.Length > 1 ? args[1] : null);
             var cw = new ConsoleWindow(cv);
             cw.Run();
         }

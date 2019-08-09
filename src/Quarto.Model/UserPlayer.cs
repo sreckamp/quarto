@@ -5,12 +5,12 @@ using System.Threading;
 
 namespace Quarto.Model
 {
-    public class UserPlayer : Player
+    public class UserPlayer : AbstractPlayer
     {
         private readonly object m_chooseLock = new object();
         private readonly object m_placeLock = new object();
 
-        public UserPlayer(int playerNumber) : base(playerNumber) { }
+        public UserPlayer(string name) : base(name) { }
 
         protected override QuartoPiece InternalChoosePiece(QuartoBoard board, IList<QuartoPiece> pieces)
         {

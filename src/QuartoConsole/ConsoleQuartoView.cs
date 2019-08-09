@@ -1,24 +1,19 @@
-﻿using GameBase.Model;
+﻿using GameBase.Console;
+using GameBase.Model;
+using GameBoard.Model;
+using Quarto.Learning;
 using Quarto.Model;
 using System;
-using SConsole = System.Console;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using GameBase.Console;
-using GameBoard.Model;
-using Quarto.LearningPlayer;
-using System.IO;
+using System.Threading;
+using SConsole = System.Console;
 
 namespace Quarto.Console
 {
     public class ConsoleQuartoView:ConsoleFlowContainer, IRunnable
     {
-        private readonly IPlayerFactory m_factory = new LearningPlayerFactory();
-        //private readonly IPlayerFactory m_factory = new RandomPlayerFactory();
-        //private readonly IPlayerFactory m_factory = new UserPlayerFactory();
         private readonly Game m_game;
         private readonly MappingCollection<ConsoleQuartoPieceView, QuartoPiece> m_pieces;
         private readonly MappingCollection<ConsoleQuartoPieceView, Placement<QuartoPiece,Move>> m_placements;
@@ -26,12 +21,19 @@ namespace Quarto.Console
         private readonly ConsoleGrid<ConsoleQuartoPieceView> m_board;
         private readonly ConsoleTextBox m_details;
         private readonly ConsoleTextBox m_text;
+        private readonly string m_player1Name;
+        private readonly string m_player2Name;
+        private readonly bool m_train;
+        private readonly object m_lineEnteredLock = new object();
 
-        public ConsoleQuartoView()
+        public ConsoleQuartoView(string player1Name, string player2Name, bool train = false)
         {
+            m_train = train;
+            m_player1Name = player1Name ?? "Player 1";
+            m_player2Name = player2Name ?? "Player 2";
             SConsole.OutputEncoding = Encoding.Unicode;
             SConsole.CursorVisible = false;
-            m_game = new Game(m_factory, 2000, 2000);
+            m_game = new Game();
             m_game.StateChanged += gameStateChanged;
             m_game.ActivePlayerChanged += activePlayerChanged;
             m_game.Board.QuartoRowChanged += quartoChanged;
@@ -170,11 +172,11 @@ namespace Quarto.Console
             m_board.IsEnabled = e.NewVal == GameState.Place;
             if (m_pieceBox.IsEnabled)
             {
-                m_text.Text = string.Format("{0}, choose the piece for {1} to place.", m_game.ActivePlayer, m_game.OtherPlayer);
+                m_text.Text = $"{m_game.ActivePlayer}, choose the piece for {m_game.OtherPlayer} to place.";
             }
             else if (m_board.IsEnabled)
             {
-                m_text.Text = string.Format("{0}, choose the target location.", m_game.ActivePlayer);
+                m_text.Text = $"{m_game.ActivePlayer}, choose the target location.";
             }
             else
             {
@@ -190,12 +192,12 @@ namespace Quarto.Console
             }
         }
 
-        private void activePlayerChanged(object sender, ChangedValueArgs<Player> e)
+        private void activePlayerChanged(object sender, ChangedValueArgs<AbstractPlayer> e)
         {
             getPlayerView(e.NewVal);
         }
 
-        private ConsoleQuartoPlayerView getPlayerView(Player p)
+        private ConsoleQuartoPlayerView getPlayerView(AbstractPlayer p)
         {
             if (!m_playerModels.ContainsKey(p))
             {
@@ -209,7 +211,7 @@ namespace Quarto.Console
             return m_playerModels[p];
         }
 
-        private Dictionary<Player, ConsoleQuartoPlayerView> m_playerModels = new Dictionary<Player, ConsoleQuartoPlayerView>();
+        private Dictionary<AbstractPlayer, ConsoleQuartoPlayerView> m_playerModels = new Dictionary<AbstractPlayer, ConsoleQuartoPlayerView>();
         public ConsoleQuartoPlayerView ActivePlayerModel
         {
             get => getPlayerView(m_game.ActivePlayer);
@@ -227,20 +229,62 @@ namespace Quarto.Console
 
         public void Run()
         {
-            var lGame = new Game(m_factory);
-            if(File.Exists("default.qdp"))
+            if(m_train)
             {
-                LearningPlayerFactory.Pool = LearningDataPool.Read("default.qdp");
+                var lp = new LearningPlayer("trainee","default.qdp");
+                lp.Train(50000);
             }
-            LearningPlayerFactory.IsLearning = true;
-            for (int i =0; i < 500000; i++)
+            var player1 = getPlayer(m_player1Name);
+            var player2 = getPlayer(m_player2Name);
+            while (true)
             {
-                lGame.Play();
+                m_details.Text = string.Empty;
+                m_text.Text = string.Empty;
+                var winner = m_game.Play(player1, player2);
+                if(winner != null)
+                {
+                    m_text.Text = $"{winner} Wins!";
+                }
+                else
+                {
+                    m_text.Text = "Tie Game!";
+                }
+                m_text.Text += "  Press Enter to restart.";
+                lock (m_lineEnteredLock)
+                {
+                    Monitor.Wait(m_lineEnteredLock);
+                }
             }
-            LearningPlayerFactory.IsLearning = false;
-            LearningDataPool.Write("default.qdp", LearningPlayerFactory.Pool);
-            m_game.Play();
-            while (true) System.Threading.Thread.Sleep(1000);
+        }
+
+        protected override bool ComponentLineEntered(string line)
+        {
+            var res = base.ComponentLineEntered(line);
+            lock (m_lineEnteredLock)
+            {
+                Monitor.PulseAll(m_lineEnteredLock);
+            }
+            return res;
+        }
+
+        private AbstractPlayer getPlayer(string name)
+        {
+            AbstractPlayer player = null;
+            if(name?.StartsWith("~") ?? false)
+            {
+                name = name.Substring(1);
+                player = new RandomPlayer(name, 2000, 2000);
+            }
+            else if (name?.StartsWith("?") ?? false)
+            {
+                name = name.Substring(1);
+                player = new LearningPlayer(name, "default.qdp", 2000, 2000);
+            }
+            else
+            {
+                player = new UserPlayer(name);
+            }
+            return player;
         }
     }
 }

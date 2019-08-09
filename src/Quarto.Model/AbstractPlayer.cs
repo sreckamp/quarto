@@ -1,9 +1,6 @@
 ﻿using GameBase.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Quarto.Model
 {
@@ -27,14 +24,14 @@ namespace Quarto.Model
         public Move Move { get; private set; }
     }
 
-    public class Player
+    public abstract class AbstractPlayer
     {
-        private readonly int m_playerNumber;
-        public Player(int playerNumber)
+        public AbstractPlayer(string name)
         {
-            m_playerNumber = playerNumber;
+            Name = name;
         }
 
+        public string Name { get; private set; }
         public event EventHandler<ChooseEventArgs> Chosen;
         public QuartoPiece ChoosePiece(QuartoBoard board, IList<QuartoPiece> pieces)
         {
@@ -43,7 +40,7 @@ namespace Quarto.Model
             return p;
         }
 
-        public virtual void Prepare() { }
+        public virtual AbstractPlayer Prepare() { return this; }
 
         protected virtual QuartoPiece InternalChoosePiece(QuartoBoard board, IList<QuartoPiece> pieces)
         {
@@ -64,7 +61,7 @@ namespace Quarto.Model
 
         public override string ToString()
         {
-            return string.Format("Player {0}", m_playerNumber);
+            return Name;
         }
 
         public virtual void GameOver(GameResult result) { }

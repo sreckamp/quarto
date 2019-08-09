@@ -65,10 +65,6 @@
       <Project>{45cfc74e-2b9d-4ed3-82ef-617e3f4404b2}</Project>
       <Name>GameBase.Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Quarto.LearningPlayer\Quarto.LearningPlayer.csproj">
-      <Project>{4B78B1FE-8EE8-4979-A189-1B3654E64747}</Project>
-      <Name>Quarto.LearningPlayer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Quarto.Model\Quarto.Model.csproj">
       <Project>{9cb0c1de-c768-4fa1-ae90-0c7a6651ff68}</Project>
       <Name>Quarto.Model</Name>
