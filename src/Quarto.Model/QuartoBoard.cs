@@ -11,7 +11,10 @@ namespace Quarto.Model
 {
     public class QuartoBoard : GameBoard<QuartoPiece, Move>
     {
-        public QuartoBoard() : base(new QuartoPlaceRule(),4,4)
+        private const int ROWS = 4;
+        private const int COLUMNS = 4;
+
+        public QuartoBoard() : base(new QuartoPlaceRule(), COLUMNS,ROWS)
         {
             RowQuartoType = new ObservableList<object>();
             ColumnQuartoType = new ObservableList<object>();
@@ -166,5 +169,17 @@ namespace Quarto.Model
             return null;
         }
 
+        public int[,] ToArray()
+        {
+            var res = new int[4, 4];
+            for(int x = MinX; x < MaxX; x++)
+            {
+                for (int y = MinY; y < MaxY; y++)
+                {
+                    res[x, y] = this[x, y];
+                }
+            }
+            return res;
+        }
     }
 }

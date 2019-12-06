@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-
+using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SNSEvents;
-
+using Newtonsoft.Json;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -32,20 +33,53 @@ namespace QuartoLambda
         /// <param name="evnt"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
+        public APIGatewayProxyResponse FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            foreach(var record in evnt.Records)
+            context.Logger.LogLine($"HttpMethod:\"{request.HttpMethod}\"");
+            context.Logger.LogLine($"Body:\"{request.Body}\"");
+            context.Logger.LogLine($"Headers:\"{request.Headers?.Count.ToString() ?? "<null>"}\"");
+            if(request.Headers != null)
             {
-                await ProcessRecordAsync(record, context);
+                foreach (var h in request.Headers)
+                {
+                    context.Logger.LogLine($"  {h.Key}=\"{h.Value}\"");
+                }
             }
+            //foreach (var record in evnt.Records)
+            //{
+            //    await ProcessRecordAsync(record, context);
+            //}
+            //await Task.CompletedTask;
+            return buildResponse();
+        }
+
+        private class Result
+        {
+            public string Author;
+            public string Message;
         }
 
         private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)
         {
-            context.Logger.LogLine($"Processed record {record.Sns.Message}");
+            context.Logger.LogLine($"Steve was here...");
+            //context.Logger.LogLine($"Processed record {record.Sns.Message}");
 
             // TODO: Do interesting work based on the new message
             await Task.CompletedTask;
+        }
+
+        private APIGatewayProxyResponse buildResponse()
+        {
+            return new APIGatewayProxyResponse
+            {
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json; charset=utf-8" } },
+                StatusCode = (int)HttpStatusCode.OK,
+                Body = JsonConvert.SerializeObject(new Result()
+                {
+                    Author = "Steve",
+                    Message = "Success!"
+                }),
+            };
         }
     }
 }

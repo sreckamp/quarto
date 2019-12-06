@@ -14,9 +14,40 @@ namespace Quarto.Console
     {
         public static void Main(string[] args)
         {
-            var cv = new ConsoleQuartoView(args.Length > 0 ? args[0] : null, args.Length > 1 ? args[1] : null);
-            var cw = new ConsoleWindow(cv);
-            cw.Run();
+            var qb = new QuartoBoard();
+            qb.Clear();
+            var ia = qb.ToArray();
+            //var cv = new ConsoleQuartoView(args.Length > 0 ? args[0] : null, args.Length > 1 ? args[1] : null);
+            //var cw = new ConsoleWindow(cv);
+            //cw.Run();
+        }
+    }
+
+    static class BoardTools
+    {
+        public static int[] GetHashes(this QuartoBoard board)
+        {
+            var temp = board.ToArray();
+            var res = new int[] { 0, 0, 0, 0 };
+            for (int idx = 0; idx < temp.GetLength(0); idx++)
+            {
+                var negIdx = temp.GetLength(0) - 1 - idx;
+                res[0] = HashCode.Combine(res[0], temp[x,0];
+            }
+        }
+
+        private static T[,] RotateCW<T>(this T[,] array)
+        {
+            var res = new T[array.GetLength(1), array.GetLength(0)];
+            for(int x = 0; x < array.GetLength(0);x++)
+            {
+                for (int y = 0; y < array.GetLength(1); y++)
+                {
+                    res[array.GetLength(1) - 1 - y, x] = array[x, y];
+                }
+
+            }
+            return res;
         }
     }
 }
