@@ -1,5 +1,4 @@
 ﻿using GameBase.Model;
-using GameBoard.WPF.ViewModel;
 using Quarto.Model;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +8,7 @@ using System.Drawing;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.CommandWpf;
 using GameBase.WPF;
-using GameBoard.Model;
+using GameBase.WPF.ViewModel;
 
 namespace Quarto.WPF.ViewModel
 {
@@ -164,14 +163,7 @@ namespace Quarto.WPF.ViewModel
             {
                 m_playerModels.Clear();
                 var winner = m_game.Play(new UserPlayer("Player 1"), new UserPlayer("Player 2"));
-                if(winner != null)
-                {
-                    ActionText = $"{winner} Wins!";
-                }
-                else
-                {
-                    ActionText = "Tie Game!";
-                }
+                ActionText = winner != null ? $"{winner} Wins!" : "Tie Game!";
                 ActionText += "  Click anywhere to restart.";
                 lock (m_restartLock)
                 {

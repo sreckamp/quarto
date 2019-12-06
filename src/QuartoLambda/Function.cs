@@ -30,7 +30,7 @@ namespace QuartoLambda
         /// This method is called for every Lambda invocation. This method takes in an SNS event object and can be used 
         /// to respond to SNS messages.
         /// </summary>
-        /// <param name="evnt"></param>
+        /// <param name="request"></param>
         /// <param name="context"></param>
         /// <returns></returns>
         public APIGatewayProxyResponse FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)

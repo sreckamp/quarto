@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBase.WPF", "..\..\game-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameBase.Console", "..\..\game-base\src\GameBase.Console\GameBase.Console.csproj", "{BB28C9FD-64AA-4DE1-89F6-298312235045}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "temp", "temp\temp.csproj", "{D0E80997-08E7-4BD7-9043-D9D2A767A6FC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuartoLambda", "QuartoLambda\QuartoLambda.csproj", "{5424028F-1994-48CC-8ADC-853B01267155}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuartoLambda.Tests", "QuartoLambda.Tests\QuartoLambda.Tests.csproj", "{6D7EAE73-03EA-4C97-BB32-0E82184BB25E}"
@@ -51,10 +49,6 @@ Global
 		{BB28C9FD-64AA-4DE1-89F6-298312235045}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB28C9FD-64AA-4DE1-89F6-298312235045}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB28C9FD-64AA-4DE1-89F6-298312235045}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0E80997-08E7-4BD7-9043-D9D2A767A6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0E80997-08E7-4BD7-9043-D9D2A767A6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0E80997-08E7-4BD7-9043-D9D2A767A6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0E80997-08E7-4BD7-9043-D9D2A767A6FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5424028F-1994-48CC-8ADC-853B01267155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5424028F-1994-48CC-8ADC-853B01267155}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5424028F-1994-48CC-8ADC-853B01267155}.Release|Any CPU.ActiveCfg = Release|Any CPU

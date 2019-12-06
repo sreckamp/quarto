@@ -1,6 +1,5 @@
 ﻿using GameBase.Console;
 using GameBase.Model;
-using GameBoard.Model;
 using Quarto.Learning;
 using Quarto.Model;
 using System;
@@ -129,23 +128,16 @@ namespace Quarto.Console
             }
         }
 
-        private string appendWinReason(StringBuilder sb, IEnumerable<object> results, string text = "")
+        private static string appendWinReason(StringBuilder sb, IEnumerable<object> results, string text = "")
         {
             if (sb.Length > 0)
             {
                 sb.AppendLine();
             }
-            int i = 0;
+            var i = 0;
             foreach (var r in results)
             {
-                if (i++ > 0)
-                {
-                    sb.Append(" & ");
-                }
-                else
-                {
-                    sb.Append(text);
-                }
+                sb.Append(i++ > 0 ? " & " : text);
                 sb.Append(r);
             }
             return sb.ToString();
@@ -211,7 +203,7 @@ namespace Quarto.Console
             return m_playerModels[p];
         }
 
-        private Dictionary<AbstractPlayer, ConsoleQuartoPlayerView> m_playerModels = new Dictionary<AbstractPlayer, ConsoleQuartoPlayerView>();
+        private readonly Dictionary<AbstractPlayer, ConsoleQuartoPlayerView> m_playerModels = new Dictionary<AbstractPlayer, ConsoleQuartoPlayerView>();
         public ConsoleQuartoPlayerView ActivePlayerModel
         {
             get => getPlayerView(m_game.ActivePlayer);
@@ -267,7 +259,7 @@ namespace Quarto.Console
             return res;
         }
 
-        private AbstractPlayer getPlayer(string name)
+        private static AbstractPlayer getPlayer(string name)
         {
             AbstractPlayer player = null;
             if(name?.StartsWith("~") ?? false)

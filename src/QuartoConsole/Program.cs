@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Quarto.Console
 {
-    class Program
+    static class Program
     {
         public static void Main(string[] args)
         {
@@ -23,25 +23,27 @@ namespace Quarto.Console
         }
     }
 
-    static class BoardTools
+    internal static class BoardTools
     {
         public static int[] GetHashes(this QuartoBoard board)
         {
             var temp = board.ToArray();
             var res = new int[] { 0, 0, 0, 0 };
-            for (int idx = 0; idx < temp.GetLength(0); idx++)
+            for (var idx = 0; idx < temp.GetLength(0); idx++)
             {
                 var negIdx = temp.GetLength(0) - 1 - idx;
-                res[0] = HashCode.Combine(res[0], temp[x,0];
+//                res[0] = HashCode.Combine(res[0], temp[x,0]);
             }
+
+            return res;
         }
 
         private static T[,] RotateCW<T>(this T[,] array)
         {
             var res = new T[array.GetLength(1), array.GetLength(0)];
-            for(int x = 0; x < array.GetLength(0);x++)
+            for(var x = 0; x < array.GetLength(0);x++)
             {
-                for (int y = 0; y < array.GetLength(1); y++)
+                for (var y = 0; y < array.GetLength(1); y++)
                 {
                     res[array.GetLength(1) - 1 - y, x] = array[x, y];
                 }
