@@ -47,7 +47,7 @@ namespace Quarto.WPF.ViewModel
             ColumnText = attributesToString(m_game.Board.ColumnQuartoType);
         }
 
-        private string attributesToString(IList<object> attributes)
+        private static string attributesToString(IEnumerable<object> attributes)
         {
             var sb = new StringBuilder();
             foreach (var a in attributes)
@@ -138,14 +138,7 @@ namespace Quarto.WPF.ViewModel
         }
         public QuartoPlacementViewModel ActivePlacement
         {
-            get
-            {
-                if (FloatingPieces.Count > 0)
-                {
-                    return FloatingPieces[0];
-                }
-                return null;
-            }
+            get => FloatingPieces.Count > 0 ? FloatingPieces[0] : null;
             set
             {
                 FloatingPieces.Clear();

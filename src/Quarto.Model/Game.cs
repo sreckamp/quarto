@@ -32,7 +32,7 @@ namespace Quarto.Model
         public AbstractPlayer ActivePlayer => m_players[activeIdx];
         public AbstractPlayer OtherPlayer => m_players[(activeIdx + 1) % 2];
 
-        private int m_activeIdx = 0;
+        private int m_activeIdx;
         private int activeIdx
         {
             get => m_activeIdx;
@@ -48,7 +48,7 @@ namespace Quarto.Model
         private GameState m_state;
         public GameState State
         {
-            get { return m_state; }
+            get => m_state;
             set
             {
                 var old = m_state;

@@ -28,9 +28,9 @@ namespace Quarto.Model
             RowQuartoType.Clear();
             ColumnQuartoType.Clear();
             DiagonalQuartoType.Clear();
-            for (int y = 0; y < 4; y++)
+            for (var y = 0; y < ROWS; y++)
             {
-                for (int x = 0; x < 4; x++)
+                for (var x = 0; x < COLUMNS; x++)
                 {
                     var m = new Move(x, y);
                     var p = new Placement<QuartoPiece,Move>(new QuartoPiece(), m);
@@ -49,11 +49,11 @@ namespace Quarto.Model
 
         public bool WouldWin(QuartoPiece piece, Move move)
         {
-            int rowCalcs = 0xFF;
-            int colCalcs = 0xFF;
-            int diagCalcs = 0xFF;
+            var rowCalcs = 0xFF;
+            var colCalcs = 0xFF;
+            var diagCalcs = 0xFF;
 
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 rowCalcs &= i == move.Location.Y ? piece : this[move.Location.X, i];
                 colCalcs &= i == move.Location.X ? piece : this[i, move.Location.Y];
@@ -76,12 +76,12 @@ namespace Quarto.Model
 
         public bool IsWinning()
         {
-            int[] calcs = new int[10] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-            for (int i = 0; i < 4; i++)
+            var calcs = new int[10] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+            for (var i = 0; i < 4; i++)
             {
                 calcs[8] &= this[i, i];
                 calcs[9] &= this[i, 3 - i];
-                for (int j = 0; j < 4; j++)
+                for (var j = 0; j < 4; j++)
                 {
                     // Column
                     calcs[i] &= this[i, j];
@@ -89,7 +89,7 @@ namespace Quarto.Model
                     calcs[4 + i] &= this[j, i];
                 }
             }
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 if (calcs[i] > 0)
                 {
@@ -159,22 +159,15 @@ namespace Quarto.Model
         /// <returns></returns>
         public Move GetMove(QuartoPiece piece)
         {
-            foreach(var p in Placements)
-            {
-                if(p.Piece == piece)
-                {
-                    return p.Move;
-                }
-            }
-            return null;
+            return (from p in Placements where p.Piece == piece select p.Move).FirstOrDefault();
         }
 
         public int[,] ToArray()
         {
             var res = new int[4, 4];
-            for(int x = MinX; x < MaxX; x++)
+            for(var x = MinX; x < MaxX; x++)
             {
-                for (int y = MinY; y < MaxY; y++)
+                for (var y = MinY; y < MaxY; y++)
                 {
                     res[x, y] = this[x, y];
                 }
